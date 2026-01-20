@@ -1,0 +1,66 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /
+
+spring:
+  application:
+    name: url-shortener
+  
+  # SQLite Configuration
+  datasource:
+    url: jdbc:sqlite:db/urlshortener.db
+    driver-class-name: org.sqlite.JDBC
+    username: 
+    password: 
+  
+  jpa:
+    database-platform: org.hibernate.community.dialect.SQLiteDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        jdbc:
+          lob:
+            non_contextual_creation: true
+  
+  # Redis Configuration
+  data:
+    redis:
+      host: redis
+      port: 6379
+      database: 0
+      timeout: 60000ms
+      jedis:
+        pool:
+          max-active: 8
+          max-idle: 8
+          min-idle: 0
+          max-wait: -1ms
+
+# Application specific properties
+urlshortener:
+  base-url: http://localhost:8080
+  shortcode:
+    length: 6
+    charset: abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789
+
+# Spring Boot Actuator Configuration
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: always
+    info:
+      enabled: true
+
+info:
+  app:
+    name: URL Shortener
+    version: 1.0.0
+    description: A simple URL shortener service
