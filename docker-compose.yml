@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: url-shortener-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+    networks:
+      - url-shortener-network
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: url-shortener-backend
+    ports:
+      - "8080:8080"
+    environment:
+      - REDIS_ADDR=redis:6379
+      - REDIS_PASSWORD=
+      - DB_PATH=/data/urls.db
+      - SERVER_PORT=8080
+    volumes:
+      - sqlite_data:/data
+    depends_on:
+      - redis
+    networks:
+      - url-shortener-network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: url-shortener-frontend
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - url-shortener-network
+
+volumes:
+  redis_data:
+  sqlite_data:
+
+networks:
+  url-shortener-network:
+    driver: bridge
