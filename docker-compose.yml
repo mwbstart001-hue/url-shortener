@@ -1,0 +1,54 @@
+version: '3.8'
+
+services:
+  backend:
+    build: ./backend
+    container_name: shorturl-backend
+    ports:
+      - "5000:5000"
+    environment:
+      - SECRET_KEY=your-production-secret-key-change-me
+      - DATABASE_PATH=/app/data/shorturl.db
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - BASE_URL=http://localhost:5000
+    volumes:
+      - ./data:/app/data
+    depends_on:
+      - redis
+    restart: unless-stopped
+    networks:
+      - shorturl-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: shorturl-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    restart: unless-stopped
+    networks:
+      - shorturl-network
+    command: redis-server --appendonly yes
+
+  frontend:
+    image: nginx:alpine
+    container_name: shorturl-frontend
+    ports:
+      - "80:80"
+    volumes:
+      - ./frontend:/usr/share/nginx/html
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - backend
+    restart: unless-stopped
+    networks:
+      - shorturl-network
+
+volumes:
+  redis-data:
+
+networks:
+  shorturl-network:
+    driver: bridge
