@@ -1,7 +1,12 @@
 # URL Shortener - 短链生成服务
 
-一个完整的短链生成服务，包含前端可视化页面、后端 REST API、Redis+SQLite 数据层以及 Docker 一键部署。
+一个功能完整的短链接服务，基于 Go + Cobra 技术栈开发，包含前端可视化页面、标准化 REST API、Redis 缓存加速与 SQLite 持久化存储，支持 Docker 容器化一键部署。
 
+功能特性
+基于 Go + Cobra 技术栈，提供前端可视化页面，具备短链生成、一键复制、交互动效与基础统计展示
+提供标准化 REST API，实现短链生成、跳转重定向、访问统计与统一响应格式
+采用 Redis+SQLite 数据层，实现缓存加速与数据持久化存储
+支持 Docker 一键部署，完成服务容器化打包与快速启动
 ## 功能特性
 
 ### 前端功能
@@ -21,7 +26,7 @@
 - 统一响应格式
 
 ### 技术栈
-- **后端**: Go + Gin + GORM + go-redis
+- **后端**:Go + Cobra + go-redis
 - **前端**: Vue3 + TypeScript + Vite + Element Plus
 - **数据层**: Redis (缓存) + SQLite (持久化)
 - **部署**: Docker + Docker Compose
